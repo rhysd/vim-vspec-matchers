@@ -23,8 +23,12 @@ function! s:match(expr, pattern)
     return match(expr, pattern) != -1
 endfunction
 
-function! s:abbrev(what, mode)
+function! s:abbrev_in(what, mode)
     return hasmapto(a:what, a:mode, 1)
+endfunction
+
+function! s:abbrev(what)
+    return hasmapto(a:what, "nvo", 1)
 endfunction
 
 function! s:current_buffer_includes(str)
@@ -43,7 +47,9 @@ function! vspec#matchers#load()
     call vspec#customize_matcher('to_be_empty'             , function('empty'))
     call vspec#customize_matcher('to_have_key'             , function('has_key'))
     call vspec#customize_matcher('to_be_mapped_in'         , function('hasmapto'))
-    call vspec#customize_matcher('to_be_abbreved_in'       , function(s:SID.'abbrev'))
+    call vspec#customize_matcher('to_be_mapped'            , function('hasmapto'))
+    call vspec#customize_matcher('to_be_abbreved_in'       , function(s:SID.'abbrev_in'))
+    call vspec#customize_matcher('to_be_abbreved'          , function(s:SID.'abbrev'))
     call vspec#customize_matcher('to_be_locked'            , function('islocked'))
     call vspec#customize_matcher('to_be_in_current_buffer' , function(s:SID.'current_buffer_includes'))
     call vspec#customize_matcher('to_be_in_dir'            , function(s:SID.'dir_includes'))
