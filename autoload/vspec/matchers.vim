@@ -40,8 +40,8 @@ function! s:dir_includes(entry, dir)
 endfunction
 
 function! vspec#matchers#load()
-    call vspec#customize_matcher('to_exists'               , function('exists'))
-    call vspec#customize_matcher('to_exists_and_default_to', function(s:SID.'exists_and_default_to'))
+    call vspec#customize_matcher('to_exist'                , function('exists'))
+    call vspec#customize_matcher('to_exist_and_default_to' , function(s:SID.'exists_and_default_to'))
     call vspec#customize_matcher('to_include'              , function(s:SID.'include'))
     call vspec#customize_matcher('to_match'                , function(s:SID.'match'))
     call vspec#customize_matcher('to_be_empty'             , function('empty'))
