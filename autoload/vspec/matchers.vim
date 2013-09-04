@@ -31,7 +31,7 @@ function! s:match(expr, pattern)
     return match(expr, pattern) != -1
 endfunction
 
-function! s:have_value(dict, value)
+function! s:has_value(dict, value)
     for v in values(a:dict)
         if a:value == v
             return 1
