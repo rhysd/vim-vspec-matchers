@@ -88,6 +88,18 @@ function! s:maps_to(from, to)
     return maparg(a:from) ==# a:to
 endfunction
 
+function! s:is_unite_source(name)
+    return globpath(&rtp, 'autoload/unite/sources/'.name.'.vim') !=# ''
+endfunction
+
+function! s:is_unite_filters(name)
+    return globpath(&rtp, 'autoload/unite/filters/'.name.'.vim') !=# ''
+endfunction
+
+function! s:is_unite_kinds(name)
+    return globpath(&rtp, 'autoload/unite/kinds/'.name.'.vim') !=# ''
+endfunction
+
 function! vspec#matchers#load()
     call vspec#customize_matcher('to_exist'                , function('exists'))
     call vspec#customize_matcher('to_exist_and_default_to' , function(s:SID.'exists_and_default_to'))
@@ -116,4 +128,7 @@ function! vspec#matchers#load()
     call vspec#customize_matcher('to_be_list'              , function(s:SID.'is_list'))
     call vspec#customize_matcher('to_be_dict'              , function(s:SID.'is_dict'))
     call vspec#customize_matcher('to_be_float'             , function(s:SID.'is_float'))
+    call vspec#customize_matcher('to_be_unite_source'      , function(s:SID.'is_unite_source'))
+    call vspec#customize_matcher('to_be_unite_filters'     , function(s:SID.'is_unite_filters'))
+    call vspec#customize_matcher('to_be_unite_kinds'       , function(s:SID.'is_unite_kinds'))
 endfunction
