@@ -28,7 +28,7 @@ function! s:include(heystack, needle)
 endfunction
 
 function! s:match(expr, pattern)
-    return match(expr, pattern) != -1
+    return match(a:expr, a:pattern) != -1
 endfunction
 
 function! s:has_value(dict, value)
@@ -49,15 +49,15 @@ function! s:abbrev(what)
 endfunction
 
 function! s:current_buffer_includes(str)
-    return index(join(getline(1, line('.')), "\n"), a:str) != -1
+    return stridx(join(getline(1, line('$')), "\n"), a:str) != -1
 endfunction
 
 function! s:dir_includes(entry, dir)
-    return findfile(a:entry, a:dir) || finddir(a:entry, a:dir)
+    return findfile(a:entry, a:dir) !=# '' || finddir(a:entry, a:dir) !=# ''
 endfunction
 
 function! s:is_same_type(l, r)
-    return type(l) == type(r)
+    return type(a:l) == type(a:r)
 endfunction
 
 function! s:is_num(v)
@@ -89,15 +89,15 @@ function! s:maps_to(from, to)
 endfunction
 
 function! s:is_unite_source(name)
-    return globpath(&rtp, 'autoload/unite/sources/'.name.'.vim') !=# ''
+    return globpath(&rtp, 'autoload/unite/sources/'.a:name.'.vim') !=# ''
 endfunction
 
-function! s:is_unite_filters(name)
-    return globpath(&rtp, 'autoload/unite/filters/'.name.'.vim') !=# ''
+function! s:is_unite_filter(name)
+    return globpath(&rtp, 'autoload/unite/filters/'.a:name.'.vim') !=# ''
 endfunction
 
-function! s:is_unite_kinds(name)
-    return globpath(&rtp, 'autoload/unite/kinds/'.name.'.vim') !=# ''
+function! s:is_unite_kind(name)
+    return globpath(&rtp, 'autoload/unite/kinds/'.a:name.'.vim') !=# ''
 endfunction
 
 function! vspec#matchers#load()
@@ -129,6 +129,6 @@ function! vspec#matchers#load()
     call vspec#customize_matcher('to_be_dict'              , function(s:SID.'is_dict'))
     call vspec#customize_matcher('to_be_float'             , function(s:SID.'is_float'))
     call vspec#customize_matcher('to_be_unite_source'      , function(s:SID.'is_unite_source'))
-    call vspec#customize_matcher('to_be_unite_filters'     , function(s:SID.'is_unite_filters'))
-    call vspec#customize_matcher('to_be_unite_kinds'       , function(s:SID.'is_unite_kinds'))
+    call vspec#customize_matcher('to_be_unite_filter'     , function(s:SID.'is_unite_filter'))
+    call vspec#customize_matcher('to_be_unite_kind'       , function(s:SID.'is_unite_kind'))
 endfunction
