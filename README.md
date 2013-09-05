@@ -39,6 +39,7 @@ Expect 3.14 to_be_float
 Expect 'file' to_be_unite_source
 Expect 'buffer' to_be_unite_kind
 Expect 'sorter_rank' to_be_unite_filter
+Expect 'throw 0' to_throw_exception
 ```
 
 ### Author

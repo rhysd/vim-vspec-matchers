@@ -45,6 +45,7 @@ describe "vspec#matchers#load()"
         Expect 'file' to_be_unite_source
         Expect 'buffer' to_be_unite_kind
         Expect 'sorter_rank' to_be_unite_filter
+        Expect 'throw 0' to_throw_exception
     end
 
 end
