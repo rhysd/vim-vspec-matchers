@@ -100,6 +100,15 @@ function! s:is_unite_kinds(name)
     return globpath(&rtp, 'autoload/unite/kinds/'.name.'.vim') !=# ''
 endfunction
 
+function! s:makes_exception(normal_cmd)
+    try
+        execute a:normal_cmd
+        return 0
+    catch
+        return 1
+    endtry
+endfunction
+
 function! vspec#matchers#load()
     call vspec#customize_matcher('to_exist'                , function('exists'))
     call vspec#customize_matcher('to_exist_and_default_to' , function(s:SID.'exists_and_default_to'))
@@ -131,4 +140,5 @@ function! vspec#matchers#load()
     call vspec#customize_matcher('to_be_unite_source'      , function(s:SID.'is_unite_source'))
     call vspec#customize_matcher('to_be_unite_filters'     , function(s:SID.'is_unite_filters'))
     call vspec#customize_matcher('to_be_unite_kinds'       , function(s:SID.'is_unite_kinds'))
+    call vspec#customize_matcher('to_throw_exception'      , function(s:SID.'makes_exception'))
 endfunction
