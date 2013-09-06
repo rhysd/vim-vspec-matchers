@@ -109,36 +109,97 @@ function! s:makes_exception(normal_cmd)
     endtry
 endfunction
 
+function! s:is_the_answer(v)
+    return a:v == 42
+endfunction
+
+function! s:is_loaded(plugin)
+    return exists('g:'.a:plugin.'_loaded') || exists('g:loaded_'.a:plugin)
+endfunction
+
+function! s:is_installed(plugin)
+    for path in split(&runtimepath, ',')
+        let ret = filereadable(path . '/plugin/' . a:plugin . '.vim')
+                              \ || filereadable(path . '/autoload/' . a:plugin . '.vim')
+                              \ || isdirectory(path . '/autoload/' . a:plugin)
+        if ret | return 1 | endif
+    endfor
+    return 0
+endfunction
+
+function! s:moves_cursor(cmd)
+    let _ = deepcopy(getpos('.'))
+    execute a:cmd
+    return getpos('.') != _
+endfunction
+
+function! s:changes_variable(cmd, var)
+    let _ = deepcopy({a:var})
+    execute a:cmd
+    return _ !=# {a:var}
+endfunction
+
+function! s:makes_exception_of(cmd, errcode)
+    try
+        execute a:cmd
+        return 0
+    catch
+        if v:exception =~# ':'.a:errcode.':'
+            return 1
+        else
+            return 0
+        endif
+    endtry
+endfunction
+
+function! s:changes_current_buffer(cmd)
+    let _ = deepcopy(getline(1, line('$')))
+    execute a:cmd
+    return getline(1, line('$')) !=# _
+endfunction
+
+function! s:changes_global_var(cmd)
+    return s:changes_variable(a:cmd, 'g:')
+endfunction
+
 function! vspec#matchers#load()
-    call vspec#customize_matcher('to_exist'                , function('exists'))
-    call vspec#customize_matcher('to_exist_and_default_to' , function(s:SID.'exists_and_default_to'))
-    call vspec#customize_matcher('to_include'              , function(s:SID.'include'))
-    call vspec#customize_matcher('to_match'                , function(s:SID.'match'))
-    call vspec#customize_matcher('to_be_empty'             , function('empty'))
-    call vspec#customize_matcher('to_have_key'             , function('has_key'))
-    call vspec#customize_matcher('to_have_value'           , function(s:SID.'has_value'))
-    call vspec#customize_matcher('to_be_mapped_in'         , function('hasmapto'))
-    call vspec#customize_matcher('to_be_mapped'            , function('hasmapto'))
-    call vspec#customize_matcher('to_be_mapped_to'         , function(s:SID.'maps_to'))
-    call vspec#customize_matcher('to_be_abbreved_in'       , function(s:SID.'abbrev_in'))
-    call vspec#customize_matcher('to_be_abbreved'          , function(s:SID.'abbrev'))
-    call vspec#customize_matcher('to_be_locked'            , function('islocked'))
-    call vspec#customize_matcher('to_be_in_current_buffer' , function(s:SID.'current_buffer_includes'))
-    call vspec#customize_matcher('to_be_in_dir'            , function(s:SID.'dir_includes'))
-    call vspec#customize_matcher('to_be_readable_file'     , function('filereadable'))
-    call vspec#customize_matcher('to_be_writable_file'     , function('filewritable'))
-    call vspec#customize_matcher('to_be_executable'        , function('executable'))
-    call vspec#customize_matcher('to_be_directory'         , function('isdirectory'))
-    call vspec#customize_matcher('to_be_supported'         , function('has'))
-    call vspec#customize_matcher('to_be_type_of'           , function(s:SID.'is_same_type'))
-    call vspec#customize_matcher('to_be_num'               , function(s:SID.'is_num'))
-    call vspec#customize_matcher('to_be_string'            , function(s:SID.'is_string'))
-    call vspec#customize_matcher('to_be_funcref'           , function(s:SID.'is_funcref'))
-    call vspec#customize_matcher('to_be_list'              , function(s:SID.'is_list'))
-    call vspec#customize_matcher('to_be_dict'              , function(s:SID.'is_dict'))
-    call vspec#customize_matcher('to_be_float'             , function(s:SID.'is_float'))
-    call vspec#customize_matcher('to_be_unite_source'      , function(s:SID.'is_unite_source'))
-    call vspec#customize_matcher('to_be_unite_filter'     , function(s:SID.'is_unite_filter'))
-    call vspec#customize_matcher('to_be_unite_kind'       , function(s:SID.'is_unite_kind'))
-    call vspec#customize_matcher('to_throw_exception'      , function(s:SID.'makes_exception'))
+    call vspec#customize_matcher('to_exist'                 , function('exists'))
+    call vspec#customize_matcher('to_exist_and_default_to'  , function(s:SID.'exists_and_default_to'))
+    call vspec#customize_matcher('to_include'               , function(s:SID.'include'))
+    call vspec#customize_matcher('to_match'                 , function(s:SID.'match'))
+    call vspec#customize_matcher('to_be_empty'              , function('empty'))
+    call vspec#customize_matcher('to_have_key'              , function('has_key'))
+    call vspec#customize_matcher('to_have_value'            , function(s:SID.'has_value'))
+    call vspec#customize_matcher('to_be_mapped_in'          , function('hasmapto'))
+    call vspec#customize_matcher('to_be_mapped'             , function('hasmapto'))
+    call vspec#customize_matcher('to_be_mapped_to'          , function(s:SID.'maps_to'))
+    call vspec#customize_matcher('to_be_abbreved_in'        , function(s:SID.'abbrev_in'))
+    call vspec#customize_matcher('to_be_abbreved'           , function(s:SID.'abbrev'))
+    call vspec#customize_matcher('to_be_locked'             , function('islocked'))
+    call vspec#customize_matcher('to_be_in_current_buffer'  , function(s:SID.'current_buffer_includes'))
+    call vspec#customize_matcher('to_be_in_dir'             , function(s:SID.'dir_includes'))
+    call vspec#customize_matcher('to_be_readable_file'      , function('filereadable'))
+    call vspec#customize_matcher('to_be_writable_file'      , function('filewritable'))
+    call vspec#customize_matcher('to_be_executable'         , function('executable'))
+    call vspec#customize_matcher('to_be_directory'          , function('isdirectory'))
+    call vspec#customize_matcher('to_be_supported'          , function('has'))
+    call vspec#customize_matcher('to_be_type_of'            , function(s:SID.'is_same_type'))
+    call vspec#customize_matcher('to_be_num'                , function(s:SID.'is_num'))
+    call vspec#customize_matcher('to_be_string'             , function(s:SID.'is_string'))
+    call vspec#customize_matcher('to_be_funcref'            , function(s:SID.'is_funcref'))
+    call vspec#customize_matcher('to_be_list'               , function(s:SID.'is_list'))
+    call vspec#customize_matcher('to_be_dict'               , function(s:SID.'is_dict'))
+    call vspec#customize_matcher('to_be_float'              , function(s:SID.'is_float'))
+    call vspec#customize_matcher('to_be_unite_source'       , function(s:SID.'is_unite_source'))
+    call vspec#customize_matcher('to_be_unite_filter'       , function(s:SID.'is_unite_filter'))
+    call vspec#customize_matcher('to_be_unite_kind'         , function(s:SID.'is_unite_kind'))
+    call vspec#customize_matcher('to_throw_exception'       , function(s:SID.'makes_exception'))
+    call vspec#customize_matcher('to_throw_exception_of'    , function(s:SID.'makes_exception_of'))
+    call vspec#customize_matcher('to_be_loaded'             , function(s:SID.'is_loaded'))
+    call vspec#customize_matcher('to_be_installed'          , function(s:SID.'is_installed'))
+    call vspec#customize_matcher('to_move_cursor'           , function(s:SID.'moves_cursor'))
+    call vspec#customize_matcher('to_change_var'            , function(s:SID.'changes_variable'))
+    call vspec#customize_matcher('to_change_global_var'     , function(s:SID.'changes_global_var'))
+    call vspec#customize_matcher('to_change_current_buffer' , function(s:SID.'changes_current_buffer'))
+    call vspec#customize_matcher('to_be_the_answer_to_the_ultimate_question_of_life_the_universe_and_everything', function(s:SID.'is_the_answer'))
 endfunction

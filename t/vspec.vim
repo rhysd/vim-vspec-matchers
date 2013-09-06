@@ -1,4 +1,5 @@
-let s:root_dir = matchstr(system('git rev-parse --show-cdup'), '[^\n]\+')
+let s:root_dir = matchstr(system('git rev-parse --show-cdup'), '^\n*\zs.*\ze\n*$')
+echomsg s:root_dir
 execute 'set' 'rtp +=./'.s:root_dir
 set rtp+=~/.vim/bundle/unite.vim
 
@@ -11,7 +12,8 @@ describe "vspec#matchers#load()"
         noremap m :search('m')<CR>
     end
 
-    it "provide many matchers for vim-vspec"
+    it "provides many matchers for vim-vspec"
+        Expect 'vspec/matchers' to_be_installed
         Expect 'v:version' to_exist
         Expect '*vspec#test' to_exist
         Expect 'g:hogeee' to_exist_and_default_to 42
@@ -47,6 +49,11 @@ describe "vspec#matchers#load()"
         Expect 'buffer' to_be_unite_kind
         Expect 'sorter_rank' to_be_unite_filter
         Expect 'throw 0' to_throw_exception
+        Expect 'unlet nonexestent_var' to_throw_exception_of 'E108'
+        Expect "silent normal! \<C-g>" not to_move_cursor
+        Expect "silent normal! \<C-g>" not to_change_var 'g:hogeee'
+        Expect "let s:hogeee = 42" not to_change_global_var
+        Expect "silent normal! \<C-g>" not to_change_current_buffer
     end
 
 end
