@@ -9,7 +9,7 @@ describe "vspec#matchers#load()"
         call vspec#matchers#load()
         let g:hogeee = 42
         lockvar! g:hogeee
-        noremap m :search('m')<CR>
+        noremap m :call search('m')<CR>
     end
 
     it "provides many matchers for vim-vspec"
@@ -54,6 +54,7 @@ describe "vspec#matchers#load()"
         Expect "silent normal! \<C-g>" not to_change_var 'g:hogeee'
         Expect "let s:hogeee = 42" not to_change_global_var
         Expect "silent normal! \<C-g>" not to_change_current_buffer
+        Expect '' to_be_current_line
     end
 
 end
