@@ -6,4 +6,4 @@ script:
 install:
   - bundle install
   - mkdir -p ~/.vim/bundle && touch ~/.vimrc
-  - cd ~/.vim/bundle && git clone https://github.com/Shougo/unite.vim.git
+  - pushd ~/.vim/bundle && git clone https://github.com/Shougo/unite.vim.git && popd
