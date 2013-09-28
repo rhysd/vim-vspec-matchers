@@ -166,10 +166,6 @@ function! s:changes_global_var(cmd)
     return s:changes_variable(a:cmd, 'g:')
 endfunction
 
-function! s:same_dictionary(dict1, dict2)
-    
-endfunction
-
 function! s:current_line_is(str)
     return getline('.') ==# a:str
 endfunction
