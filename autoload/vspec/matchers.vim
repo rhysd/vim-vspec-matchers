@@ -162,6 +162,14 @@ function! s:changes_global_var(cmd)
     return s:changes_variable(a:cmd, 'g:')
 endfunction
 
+function! s:same_dictionary(dict1, dict2)
+    
+endfunction
+
+function! s:current_line_is(str)
+    return getline('.') ==# a:str
+endfunction
+
 function! vspec#matchers#load()
     call vspec#customize_matcher('to_exist'                 , function('exists'))
     call vspec#customize_matcher('to_exist_and_default_to'  , function(s:SID.'exists_and_default_to'))
@@ -201,5 +209,6 @@ function! vspec#matchers#load()
     call vspec#customize_matcher('to_change_var'            , function(s:SID.'changes_variable'))
     call vspec#customize_matcher('to_change_global_var'     , function(s:SID.'changes_global_var'))
     call vspec#customize_matcher('to_change_current_buffer' , function(s:SID.'changes_current_buffer'))
+    call vspec#customize_matcher('to_be_current_line', function(s:SID.'current_line_is'))
     call vspec#customize_matcher('to_be_the_answer_to_the_ultimate_question_of_life_the_universe_and_everything', function(s:SID.'is_the_answer'))
 endfunction
