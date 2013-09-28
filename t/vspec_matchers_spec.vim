@@ -1,5 +1,4 @@
 let s:root_dir = matchstr(system('git rev-parse --show-cdup'), '^\n*\zs.*\ze\n*$')
-echomsg s:root_dir
 execute 'set' 'rtp +=./'.s:root_dir
 set rtp+=~/.vim/bundle/unite.vim
 
