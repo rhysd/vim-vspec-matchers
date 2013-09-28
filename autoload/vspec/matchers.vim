@@ -4,7 +4,7 @@ endfunction
 let s:SID = s:get_SID()
 delfunction s:get_SID
 
-function! s:make_matcher(name func)
+function! s:make_matcher(name, func)
     call vspec#customize_matcher(a:name, function(a:func))
 endfunction
 
