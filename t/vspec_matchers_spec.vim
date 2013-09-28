@@ -1,8 +1,8 @@
-let s:root_dir = matchstr(system('git rev-parse --show-cdup'), '^\n*\zs.*\ze\n*$')
-execute 'set' 'rtp +=./'.s:root_dir
+let s:root_dir = matchstr(system('git rev-parse --show-toplevel'), '^\n*\zs.*\ze\n*$')
+let &rtp = s:root_dir.','.&rtp
 set rtp+=~/.vim/bundle/unite.vim
 
-describe "vspec#matchers#load()"
+describe 'vspec#matchers#load()'
 
     before
         call vspec#matchers#load()
@@ -11,7 +11,7 @@ describe "vspec#matchers#load()"
         noremap m :call search('m')<CR>
     end
 
-    it "provides many matchers for vim-vspec"
+    it 'provides many matchers for vim-vspec'
         Expect 'vspec/matchers' to_be_installed
         Expect 'v:version' to_exist
         Expect '*vspec#test' to_exist
