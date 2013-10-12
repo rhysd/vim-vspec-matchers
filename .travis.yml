@@ -1,0 +1,9 @@
+language: ruby
+rvm:
+  - 1.9.3
+script:
+  - rake ci
+install:
+  - bundle install
+  - mkdir -p ~/.vim/bundle && touch ~/.vimrc
+  - pushd ~/.vim/bundle && git clone https://github.com/Shougo/unite.vim.git && popd

@@ -4,7 +4,7 @@ endfunction
 let s:SID = s:get_SID()
 delfunction s:get_SID
 
-function! s:make_matcher(name func)
+function! s:make_matcher(name, func)
     call vspec#customize_matcher(a:name, function(a:func))
 endfunction
 
@@ -166,6 +166,10 @@ function! s:changes_global_var(cmd)
     return s:changes_variable(a:cmd, 'g:')
 endfunction
 
+function! s:current_line_is(str)
+    return getline('.') ==# a:str
+endfunction
+
 function! vspec#matchers#load()
     call s:make_matcher('to_exist'                 , 'exists')
     call s:make_matcher('to_exist_and_default_to'  , s:SID.'exists_and_default_to')
@@ -207,5 +211,6 @@ function! vspec#matchers#load()
     call s:make_matcher('to_change_var'            , s:SID.'changes_variable')
     call s:make_matcher('to_change_global_var'     , s:SID.'changes_global_var')
     call s:make_matcher('to_change_current_buffer' , s:SID.'changes_current_buffer')
+    call s:make_matcher('to_be_current_line'       , s:SID.'current_line_is')
     call s:make_matcher('to_be_the_answer_to_the_ultimate_question_of_life_the_universe_and_everything', s:SID.'is_the_answer')
 endfunction
