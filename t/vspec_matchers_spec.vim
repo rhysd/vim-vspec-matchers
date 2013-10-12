@@ -27,7 +27,9 @@ describe "vspec#matchers#load()"
         Expect {'a' : 1} to_have_value 1
         Expect 'm' to_be_mapped
         Expect 'm' to_be_mapped_in 'nv'
-        Expect 'm' to_be_mapped_to ":search('m')<CR>"
+        Expect 'm' to_map
+        Expect 'm' to_map_in 'n'
+        Expect 'm' to_map_to ":search('m')<CR>"
         Expect 'g:hogeee' to_be_locked
         Expect '' to_be_in_current_buffer
         Expect expand('~/.vim') to_be_in_dir expand('~')
