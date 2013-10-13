@@ -88,8 +88,12 @@ function! s:is_float(v)
     return s:is_same_type(a:v, 0.0)
 endfunction
 
-function! s:maps_to(from, to)
-    return maparg(a:from) ==# a:to
+function! s:maps_to(from, to, mode)
+    return maparg(a:from, a:mode) ==# a:to
+endfunction
+
+function! s:is_maparg_in(lhs, mode)
+    return maparg(a:lhs, a:mode) !=# ''
 endfunction
 
 function! s:is_unite_source(name)
@@ -180,8 +184,7 @@ function! vspec#matchers#load()
     call s:make_matcher('to_have_value'            , s:SID.'has_value')
     call s:make_matcher('to_be_mapped_in'          , 'hasmapto')
     call s:make_matcher('to_be_mapped'             , 'hasmapto')
-    call s:make_matcher('to_map'                   , 'maparg')
-    call s:make_matcher('to_map_in'                , 'maparg')
+    call s:make_matcher('to_map_in'                , s:SID.'is_maparg_in')
     call s:make_matcher('to_map_to'                , s:SID.'maps_to')
     call s:make_matcher('to_be_abbreved_in'        , s:SID.'abbrev_in')
     call s:make_matcher('to_be_abbreved'           , s:SID.'abbrev')
